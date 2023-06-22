@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CIS 2750 A3 - Cameron Fraser</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SVG Display GUI">
+    <meta name="keywords" content="Pain">
+    <meta name="author" content="Cameron Fraser">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+    <link rel="shortcut icon" href="#">
+</head>
+<body>
+    
+    <h1>Assignment 3 - SVG Parser and Display GUI</h1>
+    <hr>
+    <h3>SVG File Log Table</h3>
+    <div id="svgTableDiv" style="margin: auto; padding: 25px; width: 100%; height: 60%; overflow: auto;">
+        <p id="svgTablePara" style="text-align: center;"></p>
+        
+        <table border="3px solid black" cellpadding="1" cellspacing="1" id="fullSVGTable" style="height:30%;width:100%;">
+            <tbody id="svgTable">
+                <tr style="height: 40px; text-align: center;">
+                    <td><b>Image (click to download)</b></td>
+                    <td><b>File Name (click to download)</b></td>
+                    <td><b>File Size</b></td>
+                    <td style="width: 10%;"><b>Number of Rectangles</b></td>
+                    <td style="width: 10%;"><b>Number of Circles</b></td>
+                    <td style="width: 10%;"><b>Number of Paths</b></td>
+                    <td style="width: 10%;"><b>Number of Groups</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <h3>SVG View Table</h3>
+    <label id="svgSelectLab" for="svgSelect"><b> </b></label>
+
+    <select name="svgSelect" id="svgSelect" style="border-width: 3px;"> </select>
+
+    <div style="margin: auto; padding: 25px; width: 100%; height: 70%; overflow: auto;">
+        <table border="3px solid black" cellpadding="1" cellspacing="1" style="height: auto; width:100%;">
+            <tbody id="svgViewTable">
+                <tr style ="text-align: center">
+                    <td colspan="3">
+                        <img id="svgViewTableImg" style="width: 800px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 30%;" colspan="1"><b>Title</b></td>
+                    <td style="width: 70%;" colspan="2"><b>Description</b></td>
+                </tr>
+                <tr style="height: 40px">
+                    <td id="svgTitleRow" colspan="1">
+                    </td>
+                    <td id="svgDescRow" colspan="2">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 30%;" colspan="1"><b>Component</b></td>
+                    <td style="width: 50%;"colspan="1"><b>Summary</b></td>
+                    <td style="width: 20%;"colspan="1"><b>Other Attributes</b></td>
+                </tr>         
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin: auto; padding: 25px; width: 100%; height: auto; overflow: auto;">
+        <table border="3px solid black" cellpadding="1" cellspacing="1" style="height: auto; width:100%;">
+            <tbody id="svgAttrViewTable">
+                <tr>
+                    <td style="width: 30%;" colspan="1"><b>Shape</b></td>
+                    <td style="width: 70%;" colspan="2"><b>Attributes</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin:auto; padding: 25px; text-align: center;">
+        <form ref="editAttributes" id="editAttributes">
+            <div class="form-group" style="border: 3px solid black; padding: 15px">
+                <h5> Edit or Create a New Attribute</h5>
+                <select id="attrSelector" style="border-width: 3px;"> </select> <br>
+                <label for="titleInput">Name: </label>
+                <input type="text" id="editAttrName">
+
+                <label for="descInput">Value: </label>
+                <input type="text" id="editAttrValue"> <br>
+
+                <button type="button" id="editAttrBut">Submit Attribute</button>
+            </div>
+        </form>
+    </div>
+
+    <div style="margin:auto; padding: 25px; text-align: center;">
+        <form ref="editTitleDesc" id="editTitleDesc">
+            <div class="form-group" style="border: 3px solid black; padding: 15px">
+                <h5> Update Title and Description of Current File in SVG View Panel</h5> 
+                <label for="titleInput">New Title: </label>
+                <input type="text" id="updateTitleInput">
+
+                <label for="descInput">New Description: </label>
+                <input type="text" id="updateDescInput"><br>
+
+                <input type="submit" value="Update Title and Description" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+
+    <div style="margin: auto; padding: 25px; text-align: center;">
+        <label id="upFileLab" for="upFileDiv"><b>Upload an SVG File</b></label>
+        <!-- Upload SVG File Form -->
+        <div id="upFileDiv">
+            <form ref='uploadForm'
+                id='uploadForm'
+                action='/upload'
+                method='post'
+                encType="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="uploadFile" class="btn btn-secondary">
+                    <input type='submit' value='Upload' class="btn btn-secondary">
+                </div>
+            </form>
+        </div>
+
+        <!-- Create SVG Form -->
+        <div id="createSVGDiv" style="text-align:center">
+            <form ref="createSVGForm" id="createSVGForm">
+                <div class="form-group" style="border: 3px solid black; padding: 15px">
+                    <h5> Create a New SVG</h5>
+                    <p id="createSVGErrLab" style="color: red"></p>
+                    <label for="titleInput">Title: </label>
+                    <input type="text" name="createSVGFile" id="titleInput">
+
+                    <label for="descInput">Description: </label>
+                    <input type="text" name="createSVGFile" id="descInput"><br>
+
+                    <label for="fileInput">File Name: </label>
+                    <input type="text" name="createSVGFile" id="fileInput"><br>
+
+                    <input type="submit" value="Create SVG" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+        <!-- Add Shape Forms -->
+        <div style="text-align:center; border: 3px solid black;">
+            <h5> Create a New Shape</h5>
+            <select name="shapeSelect" id="shapeSelect" style="border-width: 3px;"> </select>
+            <!-- Add Rectangle Form -->
+            <div id="createRectDiv" style="margin: 10px;">
+                <form ref="createRectForm" id="createRectForm" >
+                    <div class="form-group" 
+                    style="text-align: center; 
+                    border: 3px solid red;
+                    padding: 15px">
+                        <label id="createRectLab" for="createRectBut"><b>Create a New Rectangle: </b></label>
+                        <input type="submit" value="Create Rectangle" class="btn btn-primary" id="createRectBut"><br>
+                        <div style="padding: 10px;">
+                            <label for="xInput">Rectangle X: </label>
+                            <input type="text" name="rectX" id="xInput" size="5">
+
+                            <label for="yInput">Rectangle Y: </label>
+                            <input type="text" name="rectY" id="yInput" size="5">
+
+                            <label for="wInput">Rectangle Width: </label>
+                            <input type="text" name="rectWidth" id="wInput" size="5">
+
+                            <label for="hInput">Rectangle Height: </label>
+                            <input type="text" name="rectHeight" id="hInput" size="5"><br>
+
+                            <label for="rectColorpicker">Fill Picker:</label>
+                            <input type="color" id="rectColorpicker" value="#000000"><br>
+
+                            <p id="createRectErrLab" style="color: red"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Add Circle Form -->
+            <div id="createCircDiv" style="margin: 10px;">
+                <form ref="createCircForm" id="createCircForm" >
+                    <div class="form-group" 
+                    style="text-align: center; 
+                    border: 3px solid blue;
+                    padding: 15px">
+                        <label id="createCircLab" for="createCircBut"><b>Create a New Circle: </b></label>
+                        <input type="submit" value="Create Circle" class="btn btn-primary" id="createCircBut"><br>
+                        <div style="padding: 10px;">
+                            <label for="cxInput">Circle X: </label>
+                            <input type="text" name="circX" id="cxInput" size="5">
+
+                            <label for="cyInput">Circle Y: </label>
+                            <input type="text" name="circY" id="cyInput" size="5">
+
+                            <label for="rInput">Circle Radius: </label>
+                            <input type="text" name="circR" id="rInput" size="5"><br>
+
+                            <label for="circColorpicker">Fill Picker:</label>
+                            <input type="color" id="circColorpicker" value="#000000"> <br>
+
+                            <p id="createCircErrLab" style="color: red"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Scale Shape Form-->
+        <div style="text-align:center; border: 3px solid black; margin-top: 10px">
+            <h5> Scale Shapes in an SVG</h5>
+            <select name="scaleShape" id="scaleShape" style="border-width: 3px;"> </select>
+            <!-- Add Rectangle Form -->
+            <div id="scaleShapeDiv" style="margin: 10px;">
+                <form ref="scaleShapeForm" id="scaleShapeForm" >
+                    <div class="form-group" 
+                    style="text-align: center; 
+                    border: 3px solid red;
+                    padding: 15px">
+                        <label id="scaleLab"><b>Change Scale of Rectangles or Circles: </b></label> <br>
+                        <input type="radio" name="scaleShape" value="Rectangle" id="scaleRectRadBut" checked="checked">
+                        <label for="scaleRectRadBut">Rectangle</label>
+                        <input type="radio" name="scaleShape" value="Circle" id="scaleCircRadBut">
+                        <label for="scaleCircRadBut">Circle</label>
+                        <div style="padding: 10px;">
+                            <label for="scaleChngInput">Scale Change:  </label>
+                            <input type="text" name="scaleChng" id="scaleChngInput" size="5">
+                            <input type="submit" value="Change Scale" class="btn btn-primary" id="scaleBut">
+                            <p id="scaleChngErrLab" style="color: red"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
